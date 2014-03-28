@@ -1,9 +1,9 @@
 {
   "targets": [
     {
-      "target_name": "hello",
-      'type': 'shared_library',
-      "sources": [ "src/hello.cpp" ]
+      "target_name": "nodecompute",
+      "sources": [ "src/nodecompute.cc" ],
+      "libraries": [ "/opt/AMDAPP/lib/x86_64/libOpenCL.so" ]
     }
   ],
 
@@ -11,7 +11,12 @@
   '/opt/AMDAPP/include',
 ],
 'libraries': [
-  '-lOpenCL', '-L/opt/AMDAPP/lib/x86/lib'
-]
+  '-lOpenCL', '-L/opt/AMDAPP/lib/x86'
+],
+    'link_settings': {
+          'libraries': [
+              '-lOpenCL'
+          ]
+    }
 
 }
