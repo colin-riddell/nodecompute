@@ -1,15 +1,17 @@
 {
-  "targets": [
+  'targets': [
     {
-      "target_name": "nodecompute",
-      "sources": [ "src/nodecompute.cc" ],
-      "libraries": [ "/opt/AMDAPP/lib/x86_64/libOpenCL.so" ],
-      "cflags": [ "--std=c++11" ]
+      'target_name': 'nodecompute',
+      'sources': [ 'src/nodecompute.cc' ],
+      'libraries': [ '/opt/AMDAPP/lib/x86_64/libOpenCL.so' ],
+      'cflags': [ '--std=c++11' ],
+      'include_dirs': [
+        '/opt/AMDAPP/include',
+        './external/include'
+      ],
     }
   ],
-  'include_dirs': [
-    '/opt/AMDAPP/include',
-  ],
+  
   'libraries': [
     '-lOpenCL', '-L/opt/AMDAPP/lib/x86'
   ],
