@@ -3,7 +3,7 @@
     {
       'target_name': 'nodecompute',
       'sources': [ 'src/nodecompute.cc' ],
-      'libraries': [ '/opt/AMDAPP/lib/x86_64/libOpenCL.so' ],
+      #'libraries': [ '/opt/AMDAPP/lib/x86_64/libOpenCL.so' ],
       'cflags': [ '--std=c++11' ],
       'include_dirs': [
         '/opt/AMDAPP/include',

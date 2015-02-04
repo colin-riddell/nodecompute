@@ -2,15 +2,18 @@
 #include <v8.h>
 #include <stdio.h>
 
-#include <CL/cl.hpp>
+//#include <CL/cl.hpp>
 
-using namespace cl;
+//using namespace cl;
 
 #include <iostream> 
 #include <vector>
 #include <string>
 #include <sstream>
+#include <cstddef>
 
+
+#include <CL/cl.h>
 using namespace v8;
 
 
@@ -20,9 +23,22 @@ Handle<Value> Method(const Arguments& args) {
   HandleScope scope; // This is needed by node.
 
   const std::string hw("Hello World\n");
-  std::string dev_name;
 
-  
+  cl_uint platformIdCount = 0;
+  clGetPlatformIDs (0, NULL, &platformIdCount);
+
+  std::vector<cl_platform_id> platformIds (platformIdCount);
+  clGetPlatformIDs (platformIdCount, platformIds.data (), NULL);
+
+  cl_uint deviceIdCount = 0;
+  clGetDeviceIDs (platformIds [0], CL_DEVICE_TYPE_ALL, 0, NULL, &deviceIdCount);
+  std::vector<cl_device_id> deviceIds (deviceIdCount);
+  clGetDeviceIDs (platformIds [0], CL_DEVICE_TYPE_ALL, deviceIdCount, deviceIds.data (), NULL);
+  std::cout << platformIdCount <<std::endl;
+  std::cout << deviceIdCount <<std::endl;
+
+
+  /*
   std::vector<Platform> platforms;
   std::vector<cl::Device> devices;
 
@@ -55,7 +71,8 @@ Handle<Value> Method(const Arguments& args) {
   std::cout<< "Device name:   "<< dev_name <<std::endl;
 
   cl::Context context({default_device});
-
+*/
+  std::cout << "Test print cout... working" <<std::endl;
 	char * outH = new char[hw.length()+1];
 
 
