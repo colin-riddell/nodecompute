@@ -13,7 +13,9 @@
 #include <cstddef>
 
 
-#include <CL/cl.h>
+#include "ocl.h"
+
+
 using namespace v8;
 
 
@@ -24,19 +26,8 @@ Handle<Value> Method(const Arguments& args) {
 
   const std::string hw("Hello World\n");
 
-  cl_uint platformIdCount = 0;
-  clGetPlatformIDs (0, NULL, &platformIdCount);
-
-  std::vector<cl_platform_id> platformIds (platformIdCount);
-  clGetPlatformIDs (platformIdCount, platformIds.data (), NULL);
-
-  cl_uint deviceIdCount = 0;
-  clGetDeviceIDs (platformIds [0], CL_DEVICE_TYPE_ALL, 0, NULL, &deviceIdCount);
-  std::vector<cl_device_id> deviceIds (deviceIdCount);
-  clGetDeviceIDs (platformIds [0], CL_DEVICE_TYPE_ALL, deviceIdCount, deviceIds.data (), NULL);
-  std::cout << platformIdCount <<std::endl;
-  std::cout << deviceIdCount <<std::endl;
-
+  bool setup_result = false;
+  setup_result = ocl::ocl_setup();
 
   /*
   std::vector<Platform> platforms;
