@@ -23,7 +23,6 @@ using namespace v8;
 
 Handle<Value> Method(const Arguments& args) {
   HandleScope scope; // This is needed by node.
-
   const std::string hw("Hello World\n");
 
   bool setup_result = false;

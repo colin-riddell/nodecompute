@@ -19,7 +19,10 @@
   'link_settings': {
         'libraries': [
             '-lOpenCL'
-        ]
+        ],
+  'conditions': [
+      ['OS=="mac"', {'libraries/': [['exclude', '/opt/AMDAPP/lib/x86_64/libOpenCL.so']]}]
+  ]
 }
 
 }
