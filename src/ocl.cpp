@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <fstream>
 
 #include <CL/cl.h>
 
@@ -15,7 +16,12 @@ namespace ocl
   const  bool ocl_setup()
   {
     cl_uint platformIdCount = 0;
-    clGetPlatformIDs (0, NULL, &platformIdCount);
+    cl_int errorcode_ret = 666;
+
+
+    errorcode_ret = clGetPlatformIDs (0, NULL, &platformIdCount);
+    if (errorcode_ret !=0)
+        std::cout <<"Error! clGetPlatformIDs failed with " << errorcode_ret << std::endl;
 
     std::vector<cl_platform_id> platformIds (platformIdCount);
     clGetPlatformIDs (platformIdCount, platformIds.data (), NULL);
@@ -26,6 +32,13 @@ namespace ocl
     clGetDeviceIDs (platformIds [0], CL_DEVICE_TYPE_ALL, deviceIdCount, deviceIds.data (), NULL);
     std::cout << platformIdCount <<std::endl;
     std::cout << deviceIdCount <<std::endl;
+
+    cl_context context = clCreateContext(0, 1, &deviceIds[0], NULL, NULL, &errorcode_ret);
+    if (errorcode_ret !=0)
+        std::cout <<"Error! clCreateContext failed with " << errorcode_ret << std::endl;
+    ocl_build(&context, errorcode_ret);
+
+    
 
     /*
     const std::string hw("Hello World\n");
@@ -68,7 +81,30 @@ namespace ocl
     */
   }
   
+const bool ocl_build(cl_context* pContext, cl_int errorcode_ret)
+{
+  std::cout << "In build" <<std::endl;
 
-
-
+  cl_program program = CreateProgram(LoadKernel("kernel.cl"), *pContext, errorcode_ret);
 }
+
+std::string LoadKernel(const char* name) {
+    std::ifstream in(name);
+  std::string result((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+  return result;
+}
+
+cl_program CreateProgram(const std::string& source, cl_context context, cl_int errorcode_ret) {
+    size_t lengths[1] = { source.size() };
+  const char* sources[1] = { source.data() };
+  cl_program program = clCreateProgramWithSource(context, 1, sources, NULL, &errorcode_ret);
+  if (errorcode_ret !=0)
+    std::cout <<"Error! clCreateProgramWithSource failed with " << errorcode_ret << std::endl;
+
+  return program;
+}
+
+
+
+
+} // namespace ocl
