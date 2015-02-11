@@ -81,11 +81,32 @@ namespace ocl
     */
   }
   
-const bool ocl_build(cl_context* pContext, cl_int errorcode_ret)
+const cl_kernel ocl_build(cl_context* pContext, cl_int errorcode_ret)
 {
   std::cout << "In build" <<std::endl;
 
   cl_program program = CreateProgram(LoadKernel("kernel.cl"), *pContext, errorcode_ret);
+
+  errorcode_ret = clBuildProgram(program, 0, NULL, "-cl-mad-enable", NULL, NULL);
+  if (errorcode_ret != 0)
+    std::cout <<"Error! clBuildProgram failed with " << errorcode_ret << std::endl;
+
+  cl_kernel kernel = clCreateKernel(program, "foo", &errorcode_ret);
+  if (errorcode_ret != 0)
+    std::cout <<"Error! clCreateKernel failed with " << errorcode_ret << std::endl;  
+  
+  int length  = 100;
+  char *inbuff = (char*)calloc(length,sizeof(char));
+  char *outbuff = (char*)calloc(length,sizeof(char));
+
+  cl_mem in_clmem = clCreateBuffer(*pContext, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, length, inbuff, &errorcode_ret);
+  cl_mem out_clmem = clCreateBuffer(*pContext, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, length, outbuff, &errorcode_ret);
+
+  clSetKernelArg(kernel, 0, sizeof(cl_mem), &in_clmem);
+  clSetKernelArg(kernel, 1, sizeof(cl_mem), &out_clmem);
+//  clSetKernelArg(kernel, 2, sizeof(cl_mem), &d_c);
+//  clSetKernelArg(kernel, 3, sizeof(unsigned int), &n);
+  return kernel;
 }
 
 std::string LoadKernel(const char* name) {
